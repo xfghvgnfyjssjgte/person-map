@@ -1,0 +1,30 @@
+workflows:
+  ios-app:
+    name: iOS App Workflow
+    max_build_duration: 60
+    environment:
+      vars:
+        XCODE_WORKSPACE: ""
+        XCODE_SCHEME: "VirtualLocationApp"
+      xcode: latest
+    scripts:
+      - name: Install dependencies
+        script: |
+          # 如果你没有用CocoaPods，可以跳过pod install
+          if [ -f "Podfile" ]; then
+            pod install
+          fi
+      - name: Build ipa for distribution
+        script: |
+          xcodebuild -project VirtualLocationApp.xcodeproj -scheme VirtualLocationApp -configuration Release -sdk iphoneos -archivePath $CM_BUILD_DIR/VirtualLocationApp.xcarchive archive
+          xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/VirtualLocationApp.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath $CM_BUILD_DIR
+    artifacts:
+      - $CM_BUILD_DIR/*.ipa
+      - $CM_BUILD_DIR/VirtualLocationApp.xcarchive
+    publishing:
+      email:
+        recipients:
+          - your@email.com
+        notify:
+          success: true
+          failure: true
