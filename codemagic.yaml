@@ -4,7 +4,7 @@ workflows:
     max_build_duration: 60
     environment:
       vars:
-        XCODE_WORKSPACE: ""
+        XCODE_WORKSPACE: "VirtualLocationApp.xcodeproj"
         XCODE_SCHEME: "VirtualLocationApp"
       xcode: latest
     scripts:
